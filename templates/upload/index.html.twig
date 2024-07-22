@@ -1,0 +1,12 @@
+{# templates/upload/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Subir Archivo{% endblock %}
+
+{% block body %}
+<h2>Subir Archivo PDF</h2>
+{{ form_start(form) }}
+{{ form_widget(form) }}
+<button type="submit" class="btn btn-primary">Subir</button>
+{{ form_end(form) }}
+{% endblock %}
