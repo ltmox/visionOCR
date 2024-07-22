@@ -1,3 +1,7 @@
 controllers:
     resource: ../src/Controller/
     type: attribute
+# config/routes.yaml
+upload:
+    path: /upload
+    controller: App\Controller\UploadController::index
