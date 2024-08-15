@@ -1,0 +1,9 @@
+{# templates/upload/download.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Descargar Archivo{% endblock %}
+
+{% block body %}
+<h2>Descargar Archivo Procesado</h2>
+<a href="{{ path('download', {'filename': filename}) }}" class="btn btn-primary btn-lg">Descargar archivo</a>
+{% endblock %}

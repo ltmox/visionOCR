@@ -1,12 +1,103 @@
 {# templates/upload/index.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}Subir Archivo{% endblock %}
+{% block title %}Subir Archivo PDF - VisionOCR{% endblock %}
+
+{% block stylesheets %}
+<style>
+  .dropzone {
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    color: #ccc;
+    margin-top: 20px;
+  }
+  .dropzone.dragover {
+    border-color: #000;
+    color: #000;
+  }
+</style>
+  
+{% endblock %}
 
 {% block body %}
-<h2>Subir Archivo PDF</h2>
-{{ form_start(form) }}
-{{ form_widget(form) }}
-<button type="submit" class="btn btn-primary">Subir</button>
-{{ form_end(form) }}
+<body class="d-flex h-100 text-center text-bg-dark">
+  <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+    <header class="mb-auto">
+      <div>
+        <h3 class="float-md-start mb-0">VisionOCR</h3>
+        <nav class="nav nav-masthead justify-content-center float-md-end">
+            <a class="nav-link fw-bold py-1 px-0 active" aria-current="page" href="#">Inicio</a>
+            <a class="nav-link fw-bold py-1 px-0" href="#">Acerca de</a>
+            <a class="nav-link fw-bold py-1 px-0" href="#">Contacto</a>
+        </nav>
+      </div>
+    </header>
+
+  <main class="px-3">
+    <h1>Subí tu PDF.</h1>
+    <p class="lead">Subí tu PDF y nosotros haremos el reconocimiento de texto para que puedas luego trabajar con tu editor de texto favorito.</p>
+     <div id="dropzone" class="dropzone">
+      Arrastra y suelta tu PDF aquí
+    </div>
+  </main>
+
+  <footer class="mt-auto text-white-50">
+    <p>Herramienta OCR desarrollada por <a href="https://www.linkedin.com/in/mariana-sanchez-caparros/" class="text-white">Mariana</a>, y <a href="https://www.linkedin.com/in/matias-calderini-935bb494/" class="text-white">Matías</a>.</p>
+  </footer>
+</div>
+<script src="https://getbootstrap.com/docs/5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script>
+  const dropzone = document.getElementById('dropzone');
+
+  dropzone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    dropzone.classList.add('dragover');
+  });
+
+  dropzone.addEventListener('dragleave', () => {
+    dropzone.classList.remove('dragover');
+  });
+
+  dropzone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    dropzone.classList.remove('dragover');
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      const file = files[0];
+      if (file.type === 'application/pdf') {
+        handleFile(file);
+      } else {
+        alert('Por favor, sube un archivo PDF.');
+      }
+    }
+  });
+
+  function handleFile(file) {
+    const formData = new FormData();
+    formData.append('file', file);
+
+    fetch('{{ path('upload_pdf') }}', {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+      // aca podes manejar la respuesta del servidor
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+  }
+</script>
+
+
+<script src="https://getbootstrap.com/docs/5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    </body>
+  
+    
+    
 {% endblock %}

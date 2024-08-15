@@ -2,6 +2,11 @@ controllers:
     resource: ../src/Controller/
     type: attribute
 # config/routes.yaml
-upload:
+upload_pdf:
     path: /upload
-    controller: App\Controller\UploadController::index
+    controller: App\Controller\OcrController::upload
+    methods: POST
+upload_page:
+    path: /upload
+    controller: App\Controller\OcrController::uploadPage
+    methods: GET
