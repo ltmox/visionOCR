@@ -74,6 +74,7 @@
     }
   });
 
+  
   function handleFile(file) {
     const formData = new FormData();
     formData.append('file', file);
@@ -84,8 +85,16 @@
     })
     .then(response => response.json())
     .then(data => {
-      console.log(data);
-      // aca podes manejar la respuesta del servidor
+      if (data.error) {
+        alert(data.error);
+      } else {
+        const link = document.createElement('a');
+        link.href = data.output;
+        link.download = data.output.split('/').pop();
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
     })
     .catch(error => {
       console.error('Error:', error);

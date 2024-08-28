@@ -23,15 +23,19 @@ class OcrController extends AbstractController
         $filePath = $uploadDir . $file->getClientOriginalName();
         $file->move($uploadDir, $file->getClientOriginalName());
 
-        $outputFilePath = $uploadDir . 'output_' . $file->getClientOriginalName();
+        $outputFilePath = $uploadDir . 'OCR_' . $file->getClientOriginalName();
         $command = escapeshellcmd("ocrmypdf -l spa $filePath $outputFilePath");
         $output = shell_exec($command);
 
-        if ($output === null) {
-            return new JsonResponse(['error' => 'OCR processing failed'], 500);
+        if ($output === '') {
+            return new JsonResponse(['error' => 'Falló el procesamiento OCR', 'detalles' => $output], 500);
         }
 
-        return new JsonResponse(['message' => 'File processed', 'output' => $outputFilePath], 200);
+        // Proceso el PDF acá
+
+        return new JsonResponse(['message' => 'Archivo procesado correctamente', 'output' => '/uploads/' . 'OCR_' . $file->getClientOriginalName()], 200);
+
+       
     }
 
     /**
