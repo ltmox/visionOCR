@@ -17,6 +17,9 @@
     border-color: #000;
     color: #000;
   }
+  .progress-container {
+    margin-top: 20%; /* Ajustar este valor según sea necesario */
+  }
 </style>
   
 {% endblock %}
@@ -25,88 +28,93 @@
 <body class="d-flex h-100 text-center text-bg-dark">
   <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
     <header class="mb-auto">
-      <div>
-        <h3 class="float-md-start mb-0">VisionOCR</h3>
+      <div class="d-flex justify-content-between align-items-center">
+        <img src="{{ asset('images/logo_aif_color.png') }}" alt="Logo AIF" class="me-2" style="height: 40px;">
+        <h3 class="float-md-start mb-0">VisiónOCR</h3>
         <nav class="nav nav-masthead justify-content-center float-md-end">
-            <a class="nav-link fw-bold py-1 px-0 active" aria-current="page" href="#">Inicio</a>
-            <a class="nav-link fw-bold py-1 px-0" href="#">Acerca de</a>
+            <a class="nav-link fw-bold py-1 px-0" href="{{ path('upload_page') }}">Inicio</a>
+            <a class="nav-link fw-bold py-1 px-0 active" aria-current="page" href="{{ path('como_funciona') }}">¿Cómo funciona?</a>
             <a class="nav-link fw-bold py-1 px-0" href="#">Contacto</a>
         </nav>
       </div>
     </header>
 
-  <main class="px-3">
-    <h1>Subí tu PDF.</h1>
-    <p class="lead">Subí tu PDF y nosotros haremos el reconocimiento de texto para que puedas luego trabajar con tu editor de texto favorito.</p>
-     <div id="dropzone" class="dropzone">
-      Arrastra y suelta tu PDF aquí
-    </div>
-  </main>
+    <main class="px-3">
+      <h1>Subí tu PDF.</h1>
+      <p class="lead">Subí tu PDF y la aplicación hará el reconocimiento de texto para que puedas luego trabajar con tu editor favorito.</p>
+      <div id="dropzone" class="dropzone">
+        Arrastrá y soltá tu PDF aquí
+      </div>
+      <div id="progress-container" class="dotted-box" style="display: none;">
+        <h5 class="card-title">Procesando</h5>
+        <div class="progress">
+          <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+        </div>
+      </div>
+    </main>
 
-  <footer class="mt-auto text-white-50">
-    <p>Herramienta OCR desarrollada por <a href="https://www.linkedin.com/in/mariana-sanchez-caparros/" class="text-white">Mariana</a>, y <a href="https://www.linkedin.com/in/matias-calderini-935bb494/" class="text-white">Matías</a>.</p>
-  </footer>
-</div>
-<script src="https://getbootstrap.com/docs/5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-<script>
-  const dropzone = document.getElementById('dropzone');
+    <footer class="mt-auto text-white-50">
+      <p>Herramienta desarrollada por la <a href="https://aif.gob.ar/" class="text-white">Agencia de Innovación de Tierra del Fuego AIAS</a></p>
+    </footer>
+  </div>
 
-  dropzone.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    dropzone.classList.add('dragover');
-  });
-
-  dropzone.addEventListener('dragleave', () => {
-    dropzone.classList.remove('dragover');
-  });
-
-  dropzone.addEventListener('drop', (e) => {
-    e.preventDefault();
-    dropzone.classList.remove('dragover');
-    const files = e.dataTransfer.files;
-    if (files.length > 0) {
-      const file = files[0];
-      if (file.type === 'application/pdf') {
-        handleFile(file);
-      } else {
-        alert('Por favor, sube un archivo PDF.');
-      }
+  <script src="https://getbootstrap.com/docs/5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script>
+    function updateProgress() {
+      fetch('{{ path('get_progress') }}')
+        .then(response => response.json())
+        .then(data => {
+          const progressBar = document.getElementById('progress-bar');
+          progressBar.style.width = data.progress + '%';
+          progressBar.setAttribute('aria-valuenow', data.progress);
+          progressBar.textContent = data.progress + '%';
+          if (data.progress < 100) {
+            setTimeout(updateProgress, 1000);
+          }
+        });
     }
-  });
 
-  
-  function handleFile(file) {
-    const formData = new FormData();
-    formData.append('file', file);
+    document.getElementById('dropzone').addEventListener('drop', function(event) {
+      event.preventDefault();
+      const file = event.dataTransfer.files[0];
+      const formData = new FormData();
+      formData.append('file', file);
 
-    fetch('{{ path('upload_pdf') }}', {
-      method: 'POST',
-      body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.error) {
-        alert(data.error);
-      } else {
-        const link = document.createElement('a');
-        link.href = data.output;
-        link.download = data.output.split('/').pop();
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
-    })
-    .catch(error => {
-      console.error('Error:', error);
+      // Mostrar el contenedor de progreso
+      document.getElementById('progress-container').style.display = 'block';
+
+      // Iniciar la actualización del progreso
+      updateProgress();
+
+      fetch('{{ path('upload_pdf') }}', {
+        method: 'POST',
+        body: formData
+      })
+      .then(response => {
+        if (response.ok) {
+          return response.blob();
+        } else {
+          throw new Error('Error en el procesamiento OCR');
+        }
+      })
+      .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.style.display = 'none';
+        a.href = url;
+        a.download = file.name.replace('.pdf', '_OCR.pdf');
+        document.body.appendChild(a);
+        a.click();
+        window.URL.revokeObjectURL(url);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
     });
-  }
-</script>
 
-
-<script src="https://getbootstrap.com/docs/5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
-    </body>
-  
-    
-    
+    document.getElementById('dropzone').addEventListener('dragover', function(event) {
+      event.preventDefault();
+    });
+  </script>
+</body>
 {% endblock %}

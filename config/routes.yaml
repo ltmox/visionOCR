@@ -10,3 +10,15 @@ upload_page:
     path: /upload
     controller: App\Controller\OcrController::uploadPage
     methods: GET
+como_funciona:
+    path: /como-funciona
+    controller: App\Controller\OcrController::comoFunciona
+    methods: GET
+get_progress:
+    path: /progress
+    controller: App\Controller\OcrController::getProgress
+    methods: GET   
+download_file:
+    path: /download/{filename}
+    controller: App\Controller\OcrController::downloadFile
+    methods: GET    

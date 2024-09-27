@@ -1,0 +1,63 @@
+{# templates/upload/como_funciona.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}¿Cómo Funciona? - VisionOCR{% endblock %}
+
+{% block stylesheets %}
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+<style>
+  .dotted-box {
+    border: 2px dashed #ccc;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    background-color: transparent;  
+    color: #fff; /* Texto blanco para contraste */
+  }
+</style>
+  
+{% endblock %}
+
+{% block body %}
+<body class="d-flex h-100 text-center text-bg-dark">
+  <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+    <header class="mb-auto">
+       <div class="d-flex justify-content-between align-items-center">
+        <img src="{{ asset('images/logo_aif_color.png') }}" alt="Logo AIF" class="me-2" style="height: 40px;">
+        <h3 class="float-md-start mb-0">VisiónOCR</h3>
+        <nav class="nav nav-masthead justify-content-center float-md-end">
+            <a class="nav-link fw-bold py-1 px-0" href="{{ path('upload_page') }}">Inicio</a>
+            <a class="nav-link fw-bold py-1 px-0 active" aria-current="page" href="{{ path('como_funciona') }}">¿Cómo funciona?</a>
+            <a class="nav-link fw-bold py-1 px-0" href="#">Contacto</a>
+        </nav>
+      </div>
+    </header>
+
+<main class="px-3 text-start">
+      <div class="dotted-box">
+        <h5 class="card-title">¿Cómo funciona?</h5>
+        <p class="card-text">VisiónOCR utiliza la librería de código abierto ocrmypdf para realizar el proceso de reconocimiento óptico de caracteres. la misma puede ser consultada <a href="https://github.com/jbarlow83/OCRmyPDF" target="_blank">aquí</a>.</p>
+      </div>
+      <div class="dotted-box">
+        <h5 class="card-title">¿Qué es OCR?</h5>
+        <p class="card-text">OCR significa Reconocimiento Óptico de Caracteres. Es una tecnología que permite convertir diferentes tipos de documentos, como documentos escaneados, archivos PDF o imágenes capturadas por una cámara digital, en datos editables y buscables.</p>
+      </div>
+      <div class="dotted-box">
+        <h5 class="card-title">¿La privacidad está garantizada?</h5>
+        <p class="card-text">VisiónOCR <strong> no </strong> almacena información solo procesa los documentos subidos y los devuelve procesados sin guardar ningún tipo de dato. Podés consultar el código fuente de VisiónOCR<a href="https://github.com/ltmox/visionOCR" target="_blank"> aquí</a>.</p>
+      </div>
+    </main>
+  <footer class="mt-auto text-white-50">
+    <p>Herramienta desarrollada por la <a href="https://aif.gob.ar/" class="text-white">Agencia de Innovación de Tierral del Fuego AIAS</a></p>
+  </footer>
+</div>
+
+
+<script src="https://getbootstrap.com/docs/5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+    </body>
+  
+    
+    
+{% endblock %}

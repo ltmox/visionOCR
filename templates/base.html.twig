@@ -25,6 +25,22 @@
     </head>
     <body>
     
-        {% block body %}{% endblock %}
+        {% block body %}
+        <body class="d-flex h-100 text-center text-bg-dark">
+  <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+    <header class="mb-auto">
+       <div class="d-flex justify-content-between align-items-center">
+        <img src="{{ asset('images/logo_aif_color.png') }}" alt="Logo AIF" class="me-2" style="height: 40px;">
+        <h3 class="float-md-start mb-0">VisiónOCR</h3>
+        <nav class="nav nav-masthead justify-content-center float-md-end">
+            <a class="nav-link fw-bold py-1 px-0" href="{{ path('upload_page') }}">Inicio</a>
+            <a class="nav-link fw-bold py-1 px-0 active" aria-current="page" href="{{ path('como_funciona') }}">¿Cómo funciona?</a>
+            <a class="nav-link fw-bold py-1 px-0" href="#">Contacto</a>
+        </nav>
+      </div>
+    </header>
+
+        
+        {% endblock %}
     </body>
 </html>
