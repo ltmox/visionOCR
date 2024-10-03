@@ -1,24 +1,32 @@
 controllers:
     resource: ../src/Controller/
     type: attribute
+
 # config/routes.yaml
-upload_pdf:
-    path: /upload
-    controller: App\Controller\OcrController::upload
-    methods: POST
+home_page:
+    path: /
+    controller: App\Controller\OcrController::homePage
+
+como_funciona:
+    path: /como-funciona
+    controller: App\Controller\OcrController::comoFunciona
+
 upload_page:
     path: /upload
     controller: App\Controller\OcrController::uploadPage
     methods: GET
-como_funciona:
-    path: /como-funciona
-    controller: App\Controller\OcrController::comoFunciona
-    methods: GET
+
+upload_pdf:
+    path: /upload-pdf
+    controller: App\Controller\OcrController::upload
+    methods: POST
+
 get_progress:
     path: /progress
     controller: App\Controller\OcrController::getProgress
-    methods: GET   
+    methods: GET
+
 download_file:
     path: /download/{filename}
     controller: App\Controller\OcrController::downloadFile
-    methods: GET    
+    methods: GET

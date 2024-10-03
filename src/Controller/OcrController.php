@@ -13,20 +13,21 @@ use Psr\Log\LoggerInterface;
 class OcrController extends AbstractController
 {
     /**
-     * @Route("/", name="upload_page", methods={"GET"})
+     * @Route("/", name="home_page", methods={"GET"})
      */
-    public function uploadPage()
+    public function homePage()
     {
         return $this->render('upload/index.html.twig');
     }
 
     /**
-     * @Route("/upload", name="upload_pdf", methods={"POST"})
+     * @Route("/upload-pdf", name="upload_pdf", methods={"POST"})
      */
     public function upload(Request $request, SessionInterface $session, LoggerInterface $logger)
     {
         // Aumentar el tiempo máximo de ejecución a 300 segundos (5 minutos)
-    set_time_limit(300);
+        set_time_limit(300);
+
         try {
             $file = $request->files->get('file');
             if (!$file || $file->getMimeType() !== 'application/pdf') {
@@ -45,7 +46,7 @@ class OcrController extends AbstractController
 
             $outputFilePath = $uploadDir . 'OCR_' . $newFilename;
             $command = sprintf(
-                'ocrmypdf -l spa --rotate-pages --deskew --force-ocr  --clean-final %s %s',
+                'ocrmypdf -l spa --rotate-pages --deskew --force-ocr --clean-final %s %s',
                 escapeshellarg($filePath),
                 escapeshellarg($outputFilePath)
             );
