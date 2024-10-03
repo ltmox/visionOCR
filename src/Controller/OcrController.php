@@ -46,7 +46,7 @@ class OcrController extends AbstractController
 
             $outputFilePath = $uploadDir . 'OCR_' . $newFilename;
             $command = sprintf(
-                'ocrmypdf -l spa --rotate-pages --deskew --force-ocr --clean-final %s %s',
+                'ocrmypdf -l spa --rotate-pages --deskew --force-ocr --clean-final %s %s 2>&1' ,
                 escapeshellarg($filePath),
                 escapeshellarg($outputFilePath)
             );
