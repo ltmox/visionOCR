@@ -55,9 +55,7 @@ class OcrController extends AbstractController
             if ($request->request->get('deskew')) {
                 $command .= ' --deskew';
             }
-            if ($request->request->get('forceOcr')) {
-                $command .= ' --force-ocr';
-            }
+            
             if ($request->request->get('cleanFinal')) {
                 $command .= ' --clean-final';
             }
