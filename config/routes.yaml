@@ -30,3 +30,8 @@ download_file:
     path: /download/{filename}
     controller: App\Controller\OcrController::downloadFile
     methods: GET
+
+contacto:
+    path: /contacto
+    controller: App\Controller\OcrController::contacto
+    methods: GET    

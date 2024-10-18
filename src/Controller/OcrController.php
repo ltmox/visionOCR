@@ -99,4 +99,16 @@ class OcrController extends AbstractController
     {
         return $this->render('upload/como_funciona.html.twig');
     }
+ /**
+     * @Route("/contacto", name="contacto", methods={"GET"})
+     */
+    public function contacto()
+    {
+        return $this->render('upload/contacto.html.twig');
+    }
 }
+
+
+
+
+
