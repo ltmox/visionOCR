@@ -27,7 +27,7 @@ class OcrController extends AbstractController
     public function upload(Request $request, SessionInterface $session, LoggerInterface $logger)
     {
         // Aumentar el tiempo máximo de ejecución a 300 segundos (5 minutos)
-        set_time_limit(300);
+        set_time_limit(1000);
 
         try {
             $file = $request->files->get('file');
