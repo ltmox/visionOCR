@@ -1,6 +1,4 @@
 {# templates/upload/index.html.twig #}
-{# templates/upload/como_funciona.html.twig #}
-
 {% extends 'base.html.twig' %}
 
 {% block title %}Subir Archivo PDF - VisionOCR{% endblock %}
@@ -33,7 +31,8 @@
         <h3 class="float-md-start mb-0">VisiónOCR</h3>
         <nav class="nav nav-masthead justify-content-center float-md-end">
             <a class="nav-link fw-bold py-1 px-0" href="{{ path('home_page') }}">Inicio</a>
-            <a class="nav-link fw-bold py-1 px-0 active" aria-current="page" href="{{ path('como_funciona') }}">¿Cómo funciona?</a>
+            <a class="nav-link fw-bold py-1 px-0" href="{{ path('upload_page') }}">Subir PDF</a>
+            <a class="nav-link fw-bold py-1 px-0" href="{{ path('como_funciona') }}">¿Cómo funciona?</a>
             <a class="nav-link fw-bold py-1 px-0" href="{{ path('contacto') }}">Contacto</a>
         </nav>
       </div>
@@ -42,6 +41,7 @@
     <main class="px-3">
       <h1>Subí tu PDF.</h1>
       <p class="lead">Subí tu PDF y la aplicación hará el reconocimiento de texto para que puedas luego trabajar con tu editor favorito.</p>
+      <p class="text-warning">El tamaño máximo de archivo admitido es de 15 MB.</p>
       
       <!-- Formulario para subir el archivo y seleccionar opciones -->
       <form id="uploadForm" method="post" enctype="multipart/form-data">
@@ -62,16 +62,16 @@
         <!-- Opciones adicionales -->
         <div class="mt-3">
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="rotatePages" name="rotatePages">
+            <input class="form-check-input" type="checkbox" id="rotatePages" name="rotatePages" title="Rotar las páginas automáticamente si es necesario">
             <label class="form-check-label" for="rotatePages">Rotar páginas automáticamente</label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="deskew" name="deskew">
+            <input class="form-check-input" type="checkbox" id="deskew" name="deskew" title="Corregir la inclinación de las páginas">
             <label class="form-check-label" for="deskew">Corregir inclinación</label>
           </div>
           <div class="form-check">
-            <input class="form-check-input" type="checkbox" id="cleanFinal" name="cleanFinal">
-            <label class="form-check-label" for="cleanFinal">Limpiar archivo final</label>
+            <input class="form-check-input" type="checkbox" id="cleanFinal" name="cleanFinal" title="Limpiar el archivo procesado eliminando artefactos visuales">
+            <label class="form-check-label" for="cleanFinal">Limpiar (Eliminar manchas)</label>
           </div>
         </div>
       </form>
@@ -95,6 +95,7 @@
     const uploadFileButton = document.getElementById('uploadFileButton');
     const fileName = document.getElementById('fileName');
     const spinnerContainer = document.getElementById('spinner-container');
+    const MAX_FILE_SIZE = 15 * 1024 * 1024; // 15 MB
 
     // Enlazar el botón con el input de tipo file
     selectFileButton.addEventListener('click', () => {
@@ -105,9 +106,16 @@
     fileInput.addEventListener('change', (event) => {
         if (event.target.files.length > 0) {
             const file = event.target.files[0];
-            fileName.textContent = `Archivo seleccionado: ${file.name}`;
-            fileName.style.display = 'block';
-            uploadFileButton.style.display = 'block';
+            if (file.size > MAX_FILE_SIZE) {
+                alert('El archivo seleccionado excede el tamaño máximo permitido de 15 MB.');
+                fileInput.value = ''; // Limpiar el input
+                fileName.style.display = 'none';
+                uploadFileButton.style.display = 'none';
+            } else {
+                fileName.textContent = `Archivo seleccionado: ${file.name}`;
+                fileName.style.display = 'block';
+                uploadFileButton.style.display = 'block';
+            }
         }
     });
 
@@ -115,6 +123,10 @@
     document.getElementById('uploadForm').addEventListener('submit', (event) => {
         event.preventDefault();
         const file = fileInput.files[0];
+        if (file.size > MAX_FILE_SIZE) {
+            alert('El archivo seleccionado excede el tamaño máximo permitido de 15 MB.');
+            return;
+        }
         const formData = new FormData(event.target);
 
         // Mostrar el spinner
@@ -134,7 +146,7 @@
         .then(blob => {
           const url = window.URL.createObjectURL(blob);
           const a = document.createElement('a');
-          a.style = 'none';
+          a.style.display = 'none';
           a.href = url;
           a.download = file.name.replace('.pdf', '_OCR.pdf');
           document.body.appendChild(a);
