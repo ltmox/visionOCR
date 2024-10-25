@@ -59,6 +59,9 @@ class OcrController extends AbstractController
             if ($request->request->get('cleanFinal')) {
                 $command .= ' --clean-final';
             }
+            if ($request->request->get('invalidateSignatures')) {
+                $command .= ' --invalidate-digital-signatures';
+            }
             $command .= sprintf(' %s %s 2>&1', escapeshellarg($filePath), escapeshellarg($outputFilePath));
 
             // Log the command for debugging
