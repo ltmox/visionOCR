@@ -48,7 +48,7 @@ class OcrController extends AbstractController
             $outputFilePath = $uploadDir . 'OCR_' . $newFilename;
 
             // Construir el comando con las opciones seleccionadas
-            $command = 'ocrmypdf -l spa --force-ocr';
+            $command = 'ocrmypdf -l spa --force-ocr --rotate-pages-threshold 0.3';
             if ($request->request->get('rotatePages')) {
                 $command .= ' --rotate-pages';
             }
